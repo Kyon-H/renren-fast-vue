@@ -44,7 +44,7 @@ export default {
         descript: '',
         showStatus: 1,
         firstLetter: '',
-        sort: ''
+        sort: 0
       },
       dataRule: {
         name: [
@@ -61,11 +61,28 @@ export default {
         ],
         firstLetter: [
           { validator: (rule, value, callback)=>{
-            
+            if(value==''){
+               callback(new Error('首字母必须填写'));
+            }else if(!/^[a-zA-Z]$/.test(value)){
+              callback(new Error('首字母必须为a-z或A-Z单个字母'));
+            }else{
+              callback();
+            }
           }, trigger: 'blur' }
         ],
         sort: [
-          { required: true, message: '排序不能为空', trigger: 'blur' }
+          { validator: (rule, value, callback)=>{
+            if(value==''||value==null){
+              callback(new Error('排序字段必须填写'));
+            }else if(isNaN(value)){
+              callback(new Error('排序字段必须是一个整数'));
+            }else if(Number(value)<0){
+              callback(new Error('排序字段必须不小于0'));
+            }
+            else{
+              callback();
+            }
+          }, trigger: 'blur' }
         ]
       }
     }
